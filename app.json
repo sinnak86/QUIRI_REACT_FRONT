@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Quiri Home",
+    "slug": "quiri-home",
+    "version": "1.0.0",
+    "scheme": "quiri-home",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "platforms": ["ios", "android", "web"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.quiri.home"
+    },
+    "android": {
+      "package": "com.quiri.home"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/icon.png"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
