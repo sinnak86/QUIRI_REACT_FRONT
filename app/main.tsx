@@ -59,7 +59,7 @@ export default function MainScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header title="Quiri Home" showBack onBackPress={() => router.back()} onMenuPress={() => {}} />
+      <Header title="Quiri Home" onMenuPress={() => {}} />
       <View style={styles.content}>
         <FlatList
           data={MENU_ITEMS}

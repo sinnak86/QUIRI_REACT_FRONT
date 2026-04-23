@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/context/ThemeContext';
 
 type HeaderProps = {
@@ -26,10 +27,13 @@ export function Header({ title, onMenuPress, showBack, onBackPress }: HeaderProp
       width: 64,
       justifyContent: 'center',
     },
-    backText: {
-      fontFamily: theme.typography.fontFamily,
-      fontSize: theme.typography.fontSize.sm,
-      color: theme.colors.text,
+    backButton: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: '#f0f0f0',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     title: {
       flex: 1,
@@ -57,8 +61,8 @@ export function Header({ title, onMenuPress, showBack, onBackPress }: HeaderProp
     <View style={styles.container}>
       <View style={styles.sideContainer}>
         {showBack && (
-          <TouchableOpacity onPress={onBackPress} activeOpacity={0.7}>
-            <Text style={styles.backText}>← 뒤로</Text>
+          <TouchableOpacity onPress={onBackPress} activeOpacity={0.7} style={styles.backButton}>
+            <Ionicons name="chevron-back" size={20} color="#333" />
           </TouchableOpacity>
         )}
       </View>
