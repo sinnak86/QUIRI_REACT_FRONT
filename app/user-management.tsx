@@ -37,7 +37,7 @@ export default function UserManagementScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header title="사용자관리" onMenuPress={() => router.back()} />
+      <Header title="사용자관리" showBack onBackPress={() => router.back()} />
       <View style={styles.content}>
         <Text style={styles.title}>사용자관리</Text>
         <Text style={styles.subtitle}>기능 구현 예정</Text>

@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
+import appConfig from '../constants/appConfig';
 
 function Checkbox({
   label,
@@ -176,6 +177,9 @@ export default function LoginScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <View style={{ position: 'absolute', bottom: 16, right: 16 }}>
+        <Text style={{ color: '#999', fontSize: 12, fontFamily: theme.typography.fontFamily }}>{appConfig.version}</Text>
+      </View>
     </SafeAreaView>
   );
 }
