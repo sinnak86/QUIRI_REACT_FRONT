@@ -21,7 +21,8 @@
     },
     "plugins": ["expo-router"],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/QUIRI_REACT_FRONT"
     }
   }
 }
