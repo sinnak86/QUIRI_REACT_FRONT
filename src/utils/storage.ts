@@ -59,4 +59,6 @@ export const Storage = {
 export const STORAGE_KEYS = {
   SAVED_ID: 'saved_id',
   AUTO_LOGIN_USER: 'auto_login_user',
+  IP_LIST: 'ip_list',
+  COUNTRY_BLOCK_ENABLED: 'country_block_enabled',
 } as const;
