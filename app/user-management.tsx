@@ -28,9 +28,9 @@ import {
   unlockUser,
 } from '@/services/userApi';
 import { User, UserPermissions } from '@/types/user';
-import { IpControlTab } from '@/components/IpControlTab';
+import { AccessCodeSettingTab } from '@/components/AccessCodeSettingTab';
 
-type Tab = 'users' | 'add' | 'permissions' | 'ip-control';
+type Tab = 'users' | 'add' | 'permissions' | 'access-code';
 
 function showAlert(title: string, message: string) {
   if (Platform.OS === 'web' && typeof window !== 'undefined') {
@@ -771,12 +771,12 @@ export default function UserManagementScreen() {
     { key: 'users', label: '사용자 목록', adminOnly: false },
     { key: 'add', label: '사용자 추가', adminOnly: true },
     { key: 'permissions', label: '권한 관리', adminOnly: true },
-    { key: 'ip-control', label: '접근제어 IP', adminOnly: true },
+    { key: 'access-code', label: '접근코드 설정', adminOnly: true },
   ];
 
   const canAddUser = isAdmin || isFirstUser;
   const visibleTabs = (isAdmin || isFirstUser)
-    ? tabs.filter((t) => (t.key !== 'permissions' && t.key !== 'ip-control') || isAdmin)
+    ? tabs.filter((t) => (t.key !== 'permissions' && t.key !== 'access-code') || isAdmin)
     : tabs.filter((t) => !t.adminOnly);
 
   return (
@@ -827,8 +827,8 @@ export default function UserManagementScreen() {
         {activeTab === 'permissions' && isAdmin && (
           <PermissionsTab users={users} />
         )}
-        {activeTab === 'ip-control' && isAdmin && (
-          <IpControlTab />
+        {activeTab === 'access-code' && isAdmin && (
+          <AccessCodeSettingTab />
         )}
         {!canAddUser && activeTab === 'add' && (
           <View style={s.noPermission}>
@@ -840,7 +840,7 @@ export default function UserManagementScreen() {
             <Text style={s.noPermText}>관리자만 접근 가능한 기능입니다.</Text>
           </View>
         )}
-        {!isAdmin && activeTab === 'ip-control' && (
+        {!isAdmin && activeTab === 'access-code' && (
           <View style={s.noPermission}>
             <Text style={s.noPermText}>관리자만 접근 가능한 기능입니다.</Text>
           </View>
