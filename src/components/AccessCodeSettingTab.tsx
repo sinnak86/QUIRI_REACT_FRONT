@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
 import {
-  getAccessCode,
+  checkAccessCodeExists,
   saveAccessCode,
   clearAccessCode,
   getCountryBlockEnabled,
@@ -43,7 +43,7 @@ function confirmAlert(title: string, message: string): Promise<boolean> {
 export function AccessCodeSettingTab() {
   const { theme } = useTheme();
 
-  const [currentCode, setCurrentCode] = useState<string | null>(null);
+  const [codeSet, setCodeSet] = useState(false);
   const [newCode, setNewCode] = useState('');
   const [saving, setSaving] = useState(false);
   const [clearing, setClearing] = useState(false);
@@ -54,11 +54,11 @@ export function AccessCodeSettingTab() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [code, enabled] = await Promise.all([
-        getAccessCode(),
+      const [exists, enabled] = await Promise.all([
+        checkAccessCodeExists(),
         getCountryBlockEnabled(),
       ]);
-      setCurrentCode(code);
+      setCodeSet(exists);
       setCountryBlockEnabledState(enabled);
     } finally {
       setLoading(false);
@@ -81,7 +81,7 @@ export function AccessCodeSettingTab() {
     setError(null);
     try {
       await saveAccessCode(newCode);
-      setCurrentCode(newCode);
+      setCodeSet(true);
       setNewCode('');
       showAlert('✅ 저장 완료', '새 접근 코드가 설정되었습니다.');
     } catch (e: any) {
@@ -97,7 +97,7 @@ export function AccessCodeSettingTab() {
     setClearing(true);
     try {
       await clearAccessCode();
-      setCurrentCode(null);
+      setCodeSet(false);
       showAlert('✅ 초기화 완료', '접근 코드가 삭제되었습니다. 이제 누구나 접근 가능합니다.');
     } catch (e: any) {
       showAlert('오류', e.message ?? '초기화에 실패했습니다.');
@@ -286,12 +286,12 @@ export function AccessCodeSettingTab() {
       <View style={s.section}>
         <Text style={s.sectionTitle}>현재 접근 코드</Text>
         <View style={s.statusRow}>
-          <View style={[s.statusDot, { backgroundColor: currentCode ? '#4CAF50' : '#555' }]} />
+          <View style={[s.statusDot, { backgroundColor: codeSet ? '#4CAF50' : '#555' }]} />
           <Text style={s.statusText}>
-            {currentCode ? '설정됨' : '미설정 (누구나 접근 가능)'}
+            {codeSet ? '설정됨' : '미설정 (누구나 접근 가능)'}
           </Text>
         </View>
-        {currentCode && (
+        {codeSet && (
           <>
             <Text style={s.codeDisplay}>{'●'.repeat(6)}</Text>
             <Text style={s.codeHint}>보안을 위해 코드는 표시되지 않습니다.</Text>
@@ -312,7 +312,7 @@ export function AccessCodeSettingTab() {
 
       {/* 새 코드 설정 */}
       <View style={s.section}>
-        <Text style={s.sectionTitle}>{currentCode ? '코드 변경' : '코드 설정'}</Text>
+        <Text style={s.sectionTitle}>{codeSet ? '코드 변경' : '코드 설정'}</Text>
         <Text style={s.label}>새 6자리 접근 코드</Text>
         <View style={s.inputRow}>
           <TextInput

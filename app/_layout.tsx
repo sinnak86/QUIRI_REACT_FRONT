@@ -7,7 +7,7 @@ import { UserProvider } from '@/context/UserContext';
 import {
   getCountryBlockEnabled,
   fetchCountryCode,
-  getAccessCode,
+  checkAccessCodeExists,
   getSessionPassed,
 } from '@/services/accessCodeApi';
 import { AccessCodeScreen } from '@/components/AccessCodeScreen';
@@ -107,8 +107,8 @@ function AccessGuard({ children }: { children: React.ReactNode }) {
         }
 
         // 3. 접근 코드 미설정 → 허용
-        const storedCode = await getAccessCode();
-        if (!storedCode) {
+        const codeExists = await checkAccessCodeExists();
+        if (!codeExists) {
           setState('allowed');
           return;
         }
