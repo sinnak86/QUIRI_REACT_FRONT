@@ -106,8 +106,12 @@ function AccessGuard({ children }: { children: React.ReactNode }) {
           }
         }
 
-        // 3. 접근 코드 미설정 → 허용
+        // 3. 접근 코드 체크 (null = 백엔드 연결 불가 → fail-closed)
         const codeExists = await checkAccessCodeExists();
+        if (codeExists === null) {
+          setState('code-required');
+          return;
+        }
         if (!codeExists) {
           setState('allowed');
           return;
@@ -122,8 +126,8 @@ function AccessGuard({ children }: { children: React.ReactNode }) {
         // 5. 코드 입력 필요
         setState('code-required');
       } catch {
-        // 오류 시 fail-open
-        setState('allowed');
+        // 오류 시 fail-closed (보안 우선 — 코드 입력 요구)
+        setState('code-required');
       }
     })();
   }, []);

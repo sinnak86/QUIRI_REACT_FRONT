@@ -7,15 +7,18 @@ const CODE_LENGTH = 6;
 // localStorage는 브라우저-오리진 단위라 외부 기기에서는 비어있음.
 // 모든 기기가 공유해야 하므로 백엔드에 BCrypt 해시로 저장.
 
-/** 접근 코드가 백엔드에 설정되어 있는지 확인합니다. */
-export async function checkAccessCodeExists(): Promise<boolean> {
+/**
+ * 접근 코드가 백엔드에 설정되어 있는지 확인합니다.
+ * @returns true = 설정됨 | false = 미설정 | null = 백엔드 연결 불가
+ */
+export async function checkAccessCodeExists(): Promise<boolean | null> {
   try {
     const res = await fetch(`${BASE_URL}/settings/access-code/exists`);
-    if (!res.ok) return false;
+    if (!res.ok) return null; // 서버 오류
     const data = await res.json();
     return data.exists === true;
   } catch {
-    return false; // 백엔드 연결 실패 시 fail-open
+    return null; // 네트워크 오류
   }
 }
 

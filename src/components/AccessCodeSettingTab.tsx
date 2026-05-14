@@ -58,7 +58,7 @@ export function AccessCodeSettingTab() {
         checkAccessCodeExists(),
         getCountryBlockEnabled(),
       ]);
-      setCodeSet(exists);
+      setCodeSet(exists === true); // null(연결 불가) → false 처리
       setCountryBlockEnabledState(enabled);
     } finally {
       setLoading(false);
@@ -81,8 +81,8 @@ export function AccessCodeSettingTab() {
     setError(null);
     try {
       await saveAccessCode(newCode);
-      setCodeSet(true);
       setNewCode('');
+      await load(); // 서버에서 저장 결과 재확인 (exists === true 로 setCodeSet)
       showAlert('✅ 저장 완료', '새 접근 코드가 설정되었습니다.');
     } catch (e: any) {
       setError(e.message ?? '저장에 실패했습니다.');
