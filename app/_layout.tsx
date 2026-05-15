@@ -18,11 +18,6 @@ type GuardState = 'checking' | 'allowed' | 'country-blocked' | 'code-required';
 
 const MONO = Platform.select({ web: "'Consolas', monospace", default: 'monospace' }) as string;
 
-const ALWAYS_ALLOWED_HOSTS = ['localhost', '127.0.0.1', '::1'];
-function isLocalhost(hostname: string): boolean {
-  return ALWAYS_ALLOWED_HOSTS.includes(hostname) || hostname.startsWith('127.');
-}
-
 // ─── 국가 차단 화면 ────────────────────────────────────────────────────────────
 
 function CountryBlockedScreen() {
@@ -70,11 +65,10 @@ function CountryBlockedScreen() {
 
 // ─── AccessGuard ──────────────────────────────────────────────────────────────
 // 검사 순서:
-//   1. localhost → 허용
-//   2. 국가 차단 ON + KR 아님 → country-blocked
-//   3. 접근 코드 미설정 → 허용
-//   4. sessionStorage 통과 기록 있음 → 허용
-//   5. → code-required (접근 코드 입력 화면)
+//   1. 국가 차단 ON + KR 아님 → country-blocked
+//   2. 접근 코드 미설정 → 허용
+//   3. sessionStorage 통과 기록 있음 → 허용
+//   4. → code-required (접근 코드 입력 화면)
 
 function AccessGuard({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<GuardState>('checking');
@@ -87,15 +81,7 @@ function AccessGuard({ children }: { children: React.ReactNode }) {
 
     (async () => {
       try {
-        const hostname = window.location.hostname;
-
-        // 1. localhost 항상 허용
-        if (isLocalhost(hostname)) {
-          setState('allowed');
-          return;
-        }
-
-        // 2. 국가 차단 체크
+        // 1. 국가 차단 체크
         const countryBlockEnabled = await getCountryBlockEnabled();
         if (countryBlockEnabled) {
           const countryCode = await fetchCountryCode();
@@ -106,20 +92,20 @@ function AccessGuard({ children }: { children: React.ReactNode }) {
           }
         }
 
-        // 3. 접근 코드 미설정 → 허용
+        // 2. 접근 코드 미설정 → 허용
         const codeExists = await checkAccessCodeExists();
         if (!codeExists) {
           setState('allowed');
           return;
         }
 
-        // 4. 세션 통과 기록 확인
+        // 3. 세션 통과 기록 확인
         if (getSessionPassed()) {
           setState('allowed');
           return;
         }
 
-        // 5. 코드 입력 필요
+        // 4. 코드 입력 필요
         setState('code-required');
       } catch {
         // 오류 시 fail-open
